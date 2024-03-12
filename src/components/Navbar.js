@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import netflix from "../images/netflix-logo.png";
 import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 function Navbar() {
+  const navigate = useNavigate();
   const [movies, setMovies] = useState([]);
 
   const getMovie = () => {
@@ -17,6 +19,10 @@ function Navbar() {
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const signinClick = () => {
+    navigate("/signin");
   };
 
   useEffect(() => {
@@ -51,9 +57,23 @@ function Navbar() {
           src={netflix}
           alt="netflix logo"
         />
-        <Button color="error" variant="contained" sx={{ height: "40px" }}>
-          Sign In
-        </Button>
+        <div>
+          <Button
+            onClick={signinClick}
+            color="error"
+            variant="contained"
+            sx={{ height: "40px" }}
+          >
+            Sign In
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            sx={{ height: "40px", marginLeft: "10px" }}
+          >
+            Logout
+          </Button>
+        </div>
       </div>
       <div style={{ padding: "20px" }}>
         <h1
@@ -67,13 +87,13 @@ function Navbar() {
           {movies[3]?.original_title}
         </h1>
         <h3 style={{ color: "#F1F1F1" }}>{movies[3]?.overview}</h3>
+        <Button
+          variant="contained"
+          sx={{ color: "black", bgcolor: "white", fontWeight: "bold" }}
+        >
+          Play Episode
+        </Button>
       </div>
-      <Button
-        variant="contained"
-        sx={{ color: "black", bgcolor: "white", fontWeight: "bold" }}
-      >
-        Play Episode
-      </Button>
     </div>
   );
 }
