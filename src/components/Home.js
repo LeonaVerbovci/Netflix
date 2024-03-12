@@ -20,7 +20,7 @@ function Home() {
   }, []);
   console.log(movies);
   return (
-    <div>
+    <div style={{ backgroundColor: "#181818" }}>
       <Grid container spacing={2}>
         {movies.map((movies) => {
           return (
