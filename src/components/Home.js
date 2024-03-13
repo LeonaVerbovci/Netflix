@@ -1,5 +1,6 @@
 import { Box, Card, CardMedia, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 function Home() {
   const [movies, setMovies] = useState([]);
@@ -22,25 +23,19 @@ function Home() {
   return (
     <div style={{ backgroundColor: "#181818" }}>
       <Grid container spacing={2}>
-        {movies.map((movies) => {
+        {movies.map((movie) => {
           return (
-            <Grid
-              item
-              xs={3}
-              style={{
-                paddingTop: "20px",
-                paddingRight: "20px",
-                paddingLeft: "20px",
-              }}
-            >
+            <Grid item xs={12} sm={6} md={3} lg={3}>
               <Box>
-                <Card>
-                  <CardMedia
-                    component="img"
-                    height="140"
-                    image={`https://image.tmdb.org/t/p/w500${movies.poster_path}`}
-                  ></CardMedia>
-                </Card>
+                <Link to="/movieDetail" state={{ movie: movie }}>
+                  <Card>
+                    <CardMedia
+                      component="img"
+                      height="200"
+                      image={`https://image.tmdb.org/t/p/original${movie?.poster_path}`}
+                    ></CardMedia>
+                  </Card>
+                </Link>
               </Box>
             </Grid>
           );

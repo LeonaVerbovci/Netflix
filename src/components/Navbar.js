@@ -1,9 +1,20 @@
 import React, { useEffect, useState } from "react";
-import netflix from "../images/netflix-logo.png";
+import netflix from "../images/net-logo.svg";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { auth } from "../firebase/setup";
+import { signOut } from "firebase/auth";
 
 function Navbar() {
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      navigate("/");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const navigate = useNavigate();
   const [movies, setMovies] = useState([]);
 
@@ -28,16 +39,17 @@ function Navbar() {
   useEffect(() => {
     getMovie();
   }, []);
+  console.log(auth.currentUser?.email);
 
   return (
     <div
       style={{
-        backgroundImage: `url(https://image.tmdb.org/t/p/original${movies[3]?.poster_path})`,
+        backgroundImage: ` linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),url(https://image.tmdb.org/t/p/original${movies[3]?.poster_path})`,
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
-        height: "500px",
         width: "100%",
+        paddingBottom: "2%",
       }}
     >
       <div
@@ -45,35 +57,35 @@ function Navbar() {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          padding: "0px 30px",
         }}
       >
         <img
           style={{
-            width: "120px",
+            width: "250px",
             height: "120px",
-            mixBlendMode: "color-burn",
           }}
           src={netflix}
           alt="netflix logo"
         />
-        <div>
+        {auth.currentUser ? (
+          <Button
+            onClick={logout}
+            variant="contained"
+            color="error"
+            sx={{ height: "40px", marginRight: "5%" }}
+          >
+            Logout
+          </Button>
+        ) : (
           <Button
             onClick={signinClick}
             color="error"
             variant="contained"
-            sx={{ height: "40px" }}
+            sx={{ height: "40px", marginRight: "5%" }}
           >
             Sign In
           </Button>
-          <Button
-            variant="contained"
-            color="error"
-            sx={{ height: "40px", marginLeft: "10px" }}
-          >
-            Logout
-          </Button>
-        </div>
+        )}
       </div>
       <div style={{ padding: "20px" }}>
         <h1

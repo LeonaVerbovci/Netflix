@@ -2,7 +2,7 @@ import React from "react";
 import { signInWithPopup } from "firebase/auth";
 import { Button } from "@mui/material";
 import { GoogleAuth, auth } from "../firebase/setup";
-import netflix from "../images/netflix-logo.png";
+import netflix from "../images/net-logo.svg";
 import { useNavigate } from "react-router-dom";
 
 function Signin() {
@@ -21,11 +21,9 @@ function Signin() {
   console.log(auth?.currentUser);
 
   return (
-    <div
-      style={{ backgroundColor: "#181818", height: "100vh", padding: "20px" }}
-    >
+    <div style={{ backgroundColor: "#181818", height: "100vh" }}>
       <img
-        style={{ width: "120px", height: "120px" }}
+        style={{ width: "250px", height: "120px", margin: 0, padding: 0 }}
         src={netflix}
         alt="netflix logo"
       />
