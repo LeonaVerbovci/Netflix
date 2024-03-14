@@ -21,10 +21,10 @@ function Home() {
   useEffect(() => {
     getMovie();
   }, []);
-  console.log(movies);
+  // console.log(movies);
 
   const addMovie = async (movie) => {
-    console.log(movie);
+    // console.log(movie);
     const movieRef = doc(database, "Movies", `${movie.id}`);
     try {
       await setDoc(movieRef, {
@@ -38,11 +38,9 @@ function Home() {
     <div style={{ backgroundColor: "#181818" }}>
       <Grid container spacing={2}>
         {movies.map((movie) => {
-          {
-            addMovie(movie);
-          }
+          addMovie(movie);
           return (
-            <Grid item xs={12} sm={6} md={3} lg={3}>
+            <Grid item xs={12} sm={6} md={3} lg={3} key={movie.id}>
               <Box>
                 <Link to="/movieDetail" state={{ movie: movie }}>
                   <Card>
