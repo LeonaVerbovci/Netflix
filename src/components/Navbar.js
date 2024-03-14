@@ -4,6 +4,8 @@ import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase/setup";
 import { signOut } from "firebase/auth";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -28,6 +30,9 @@ function Navbar() {
     try {
       await signOut(auth);
       navigate("/");
+      toast.success("Logged out Successfully!", {
+        theme: "dark",
+      });
     } catch (err) {
       console.error(err);
     }
@@ -48,6 +53,7 @@ function Navbar() {
         paddingBottom: "2%",
       }}
     >
+      <ToastContainer autoClose={2000} />
       <div
         style={{
           display: "flex",

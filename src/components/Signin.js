@@ -4,6 +4,8 @@ import { Button } from "@mui/material";
 import { GoogleAuth, auth } from "../firebase/setup";
 import netflix from "../images/net-logo.svg";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Signin() {
   const navigate = useNavigate();
@@ -11,8 +13,10 @@ function Signin() {
   const googleSignIn = async () => {
     try {
       await signInWithPopup(auth, GoogleAuth);
-
-      auth.currentUser?.emailVerified && navigate("/");
+      setTimeout(() => {
+        auth.currentUser?.emailVerified && navigate("/");
+      }, 2000);
+      toast.success("Signed In Successfully!");
     } catch (err) {
       console.error(err);
     }
@@ -22,6 +26,7 @@ function Signin() {
 
   return (
     <div style={{ backgroundColor: "#181818", height: "100vh" }}>
+      <ToastContainer autoClose={2000} />
       <img
         style={{ width: "250px", height: "120px", margin: 0, padding: 0 }}
         src={netflix}
@@ -29,7 +34,7 @@ function Signin() {
       />
       <div style={{ position: "fixed", left: "45%", top: "35%" }}>
         <Button onClick={googleSignIn} variant="contained" color="error">
-          Sign In
+          Sign In with a Google
         </Button>
         <br />
         <h2 style={{ color: "white" }}>
