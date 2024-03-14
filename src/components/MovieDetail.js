@@ -5,6 +5,7 @@ import { addDoc, collection, doc, getDocs } from "firebase/firestore";
 import { auth, database } from "../firebase/setup";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Trailer from "./Trailer";
 
 function MovieDetail() {
   const [review, setReview] = useState("");
@@ -78,9 +79,10 @@ function MovieDetail() {
           <h3 style={{ color: "white", fontWeight: "100" }}>
             {location.state.movie?.overview}
           </h3>
-          <Button variant="contained" sx={{ color: "black", bgcolor: "white" }}>
+          {/* <Button variant="contained" sx={{ color: "black", bgcolor: "white" }}>
             Play Trailer
-          </Button>
+          </Button> */}
+          <Trailer location={location} loc />
         </div>
       </Grid>
       <Grid item xs={4}>
