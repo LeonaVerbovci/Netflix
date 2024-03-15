@@ -3,16 +3,17 @@ import { doc, setDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { database } from "../firebase/setup";
+import axios from "axios";
 
 function Home() {
   const [movies, setMovies] = useState([]);
-  const getMovie = () => {
+
+  const getMovie = async () => {
     try {
-      fetch(
+      const response = await axios.get(
         "https://api.themoviedb.org/3/discover/movie?api_key=da703fb276661e683ccbbc69c8977230"
-      )
-        .then((res) => res.json())
-        .then((json) => setMovies(json.results));
+      );
+      setMovies(response.data.results);
     } catch (err) {
       console.error(err);
     }
@@ -21,10 +22,8 @@ function Home() {
   useEffect(() => {
     getMovie();
   }, []);
-  // console.log(movies);
 
   const addMovie = async (movie) => {
-    // console.log(movie);
     const movieRef = doc(database, "Movies", `${movie.id}`);
     try {
       await setDoc(movieRef, {
@@ -34,6 +33,7 @@ function Home() {
       console.error(err);
     }
   };
+
   return (
     <div style={{ backgroundColor: "#181818" }}>
       <Grid container spacing={2}>

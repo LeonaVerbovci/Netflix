@@ -19,14 +19,17 @@ function MovieDetail() {
 
   const addReview = async () => {
     try {
-      await addDoc(reviewRef, {
-        movieReview: review,
-        email: auth.currentUser?.email,
-        username: auth.currentUser?.displayName,
-        profile_image: auth.currentUser?.photoURL,
-      });
+      auth.currentUser &&
+        (await addDoc(reviewRef, {
+          movieReview: review,
+          email: auth.currentUser?.email,
+          username: auth.currentUser?.displayName,
+          profile_image: auth.currentUser?.photoURL,
+        }));
       showReview();
-      toast.success("Review added Successfully!", { theme: "dark" });
+      auth.currentUser
+        ? toast.success("Review added Successfully!", { theme: "dark" })
+        : toast.warning("Please login");
     } catch (err) {
       console.error(err);
     }
@@ -50,86 +53,84 @@ function MovieDetail() {
   }, [showReview]); // Include showReview in dependency array
 
   return (
-    <Grid container>
-      <Grid item xs={8}>
-        <div
-          style={{
-            backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${moviePosterUrl})`,
-            height: "100vh",
-            backgroundSize: "cover",
-            backgroundRepeat: "no-repeat",
-            paddingTop: "300px",
-            paddingLeft: "30px",
-            paddingRight: "30px",
-            fontFamily: "initial",
-          }}
-        >
-          <ToastContainer autoClose={2000} />
-          <h1 style={{ color: "red", fontSize: "50px" }}>
-            {location.state.movie?.original_title}
-          </h1>
-          <div style={{ display: "flex" }}>
-            <h4 style={{ color: "white" }}>
-              Language : {location.state.movie?.original_language} -
-            </h4>
-            <h4 style={{ color: "white", marginLeft: "10px" }}>
-              Release Date : {location.state.movie?.release_date}
-            </h4>
-          </div>
-          <h3 style={{ color: "white", fontWeight: "100" }}>
-            {location.state.movie?.overview}
-          </h3>
-          {/* <Button variant="contained" sx={{ color: "black", bgcolor: "white" }}>
-            Play Trailer
-          </Button> */}
-          <Trailer location={location} loc />
-        </div>
-      </Grid>
-      <Grid item xs={4}>
-        <div
-          style={{ backgroundColor: "black", height: "100vh", padding: "40px" }}
-        >
-          <h5 style={{ color: "#A4A4A4", fontWeight: "100" }}>Add REVIEW</h5>
-          <TextField
-            onChange={(e) => setReview(e.target.value)}
-            size="small"
-            label="Review"
-            variant="outlined"
-            style={{ backgroundColor: "white", borderRadius: "5px" }}
-          />
-          <Button
-            onClick={addReview}
-            sx={{ ml: "10px", bgcolor: "red", color: "white" }}
-            variant="contained"
+    <div style={{ backgroundColor: "black", height: "100%" }}>
+      <Grid container>
+        <Grid item xs={8}>
+          <div
+            style={{
+              backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${moviePosterUrl})`,
+              height: "100vh",
+              backgroundSize: "cover",
+              backgroundRepeat: "no-repeat",
+              paddingTop: "300px",
+              paddingLeft: "30px",
+              paddingRight: "30px",
+              fontFamily: "initial",
+            }}
           >
-            Submit
-          </Button>
-          <h5
-            style={{ color: "#A4A4A4", fontWeight: "100", marginTop: "20px" }}
-          >
-            REVIEWS
-          </h5>
-          {reviewData.map((each) => (
-            <div
-              key={each.id}
-              style={{ display: "flex", alignItems: "center" }}
-            >
-              <img
-                style={{ width: "40px", borderRadius: "100%" }}
-                src={each.profile_image}
-                alt="profile img"
-              />
-              <h4 style={{ color: "white", paddingLeft: "10px" }}>
-                {each.username}
+            <ToastContainer autoClose={2000} />
+            <h1 style={{ color: "red", fontSize: "50px" }}>
+              {location.state.movie?.original_title}
+            </h1>
+            <div style={{ display: "flex" }}>
+              <h4 style={{ color: "white" }}>
+                Language : {location.state.movie?.original_language} -
               </h4>
-              <h6 style={{ color: "grey", paddingLeft: "10px" }}>
-                {each.movieReview}
-              </h6>
+              <h4 style={{ color: "white", marginLeft: "10px" }}>
+                Release Date : {location.state.movie?.release_date}
+              </h4>
             </div>
-          ))}
-        </div>
+            <h3 style={{ color: "white", fontWeight: "100" }}>
+              {location.state.movie?.overview}
+            </h3>
+
+            <Trailer location={location} />
+          </div>
+        </Grid>
+        <Grid item xs={4}>
+          <div style={{ backgroundColor: "black", padding: "40px" }}>
+            <h5 style={{ color: "#A4A4A4", fontWeight: "100" }}>Add REVIEW</h5>
+            <TextField
+              onChange={(e) => setReview(e.target.value)}
+              size="small"
+              label="Review"
+              variant="outlined"
+              style={{ backgroundColor: "white", borderRadius: "5px" }}
+            />
+            <Button
+              onClick={addReview}
+              sx={{ ml: "10px", bgcolor: "red", color: "white" }}
+              variant="contained"
+            >
+              Submit
+            </Button>
+            <h5
+              style={{ color: "#A4A4A4", fontWeight: "100", marginTop: "20px" }}
+            >
+              REVIEWS
+            </h5>
+            {reviewData.map((each) => (
+              <div
+                key={each.id}
+                style={{ display: "flex", alignItems: "center" }}
+              >
+                <img
+                  style={{ width: "40px", borderRadius: "100%" }}
+                  src={each.profile_image}
+                  alt="profile img"
+                />
+                <h4 style={{ color: "white", paddingLeft: "10px" }}>
+                  {each.username}
+                </h4>
+                <h6 style={{ color: "grey", paddingLeft: "10px" }}>
+                  {each.movieReview}
+                </h6>
+              </div>
+            ))}
+          </div>
+        </Grid>
       </Grid>
-    </Grid>
+    </div>
   );
 }
 

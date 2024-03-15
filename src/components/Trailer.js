@@ -2,6 +2,7 @@ import { Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import YouTube from "react-youtube";
+import axios from "axios"; // Import Axios
 
 const customStyles = {
   content: {
@@ -14,16 +15,30 @@ const customStyles = {
   },
 };
 
-function Trailer({ location }) {
+function Trailer({ location, movieId }) {
   const [tailerView, setTrailerView] = useState([]);
   const showTrailer = () => {
-    fetch(
-      `https://api.themoviedb.org/3/movie/${location.state.movie.id}/videos?api_key=da703fb276661e683ccbbc69c8977230&language=en-US`
-    )
-      .then((res) => res.json())
-      .then((json) => setTrailerView(json.results));
+    if (
+      movieId ||
+      (location &&
+        location.state &&
+        location.state.movie &&
+        location.state.movie.id)
+    ) {
+      axios
+        .get(
+          `https://api.themoviedb.org/3/movie/${
+            movieId ? movieId : location?.state?.movie?.id
+          }/videos?api_key=da703fb276661e683ccbbc69c8977230&language=en-US`
+        )
+        .then((response) => {
+          setTrailerView(response.data.results);
+        })
+        .catch((error) => {
+          console.error("Error fetching trailer data:", error);
+        });
+    }
   };
-
   useEffect(() => {
     showTrailer();
   }, []);
@@ -46,7 +61,7 @@ function Trailer({ location }) {
   return (
     <div>
       <Button
-        variant="conatined"
+        variant="contained"
         sx={{ color: "black", bgcolor: "white" }}
         onClick={openModal}
       >

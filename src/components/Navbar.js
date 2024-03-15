@@ -6,19 +6,22 @@ import { auth } from "../firebase/setup";
 import { signOut } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Trailer from "./Trailer";
+import axios from "axios";
+import AddMovieModal from "../components/Addmovie";
 
 function Navbar() {
   const navigate = useNavigate();
   const [movies, setMovies] = useState([]);
+  const [isAddMovieModalOpen, setIsAddMovieModalOpen] = useState(false); // State to control the visibility of the AddMovieModal
 
   useEffect(() => {
     const getMovie = async () => {
       try {
-        const response = await fetch(
+        const response = await axios.get(
           "https://api.themoviedb.org/3/discover/movie?api_key=da703fb276661e683ccbbc69c8977230"
         );
-        const data = await response.json();
-        setMovies(data.results);
+        setMovies(response.data.results);
       } catch (err) {
         console.error(err);
       }
@@ -42,6 +45,10 @@ function Navbar() {
     navigate("/signin");
   };
 
+  const toggleAddMovieModal = () => {
+    setIsAddMovieModalOpen(!isAddMovieModalOpen);
+  };
+
   return (
     <div
       style={{
@@ -59,7 +66,6 @@ function Navbar() {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          padding: "20px",
         }}
       >
         <img
@@ -71,14 +77,23 @@ function Navbar() {
           alt="Netflix Logo"
         />
         {auth.currentUser ? (
-          <Button
-            onClick={logout}
-            variant="contained"
-            color="error"
-            sx={{ height: "40px", marginRight: "5%" }}
-          >
-            Logout
-          </Button>
+          <div style={{ display: "flex", paddingRight: "50px" }}>
+            <Button
+              onClick={logout}
+              variant="contained"
+              color="error"
+              sx={{ height: "40px", marginRight: "5px" }}
+            >
+              Logout
+            </Button>
+            <Button
+              onClick={toggleAddMovieModal}
+              variant="contained"
+              color="success"
+            >
+              Add Movie
+            </Button>
+          </div>
         ) : (
           <Button
             onClick={signinClick}
@@ -104,11 +119,23 @@ function Navbar() {
         <h3 style={{ color: "#F1F1F1" }}>{movies[3]?.overview}</h3>
         <Button
           variant="contained"
-          sx={{ color: "black", bgcolor: "white", fontWeight: "bold" }}
+          sx={{
+            height: "45px",
+            color: "white",
+            bgcolor: "grey",
+            fontWeight: "bold",
+          }}
         >
           Play Trailer
         </Button>
       </div>
+
+      {auth.currentUser && (
+        <AddMovieModal
+          open={isAddMovieModalOpen}
+          onClose={toggleAddMovieModal}
+        />
+      )}
     </div>
   );
 }
